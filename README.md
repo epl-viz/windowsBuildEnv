@@ -61,3 +61,19 @@ Open the EPL-Viz folder in Visual Studio and set the following CMake parameters:
 ```
 
 Build and install the project, then use `TODO INSERT SCRIPT HERE` to finish installing EPL-Viz.
+
+## Creating a MSI
+
+Download the [python standalone here](https://www.python.org/ftp/python/3.6.1/python-3.6.1-embed-amd64.zip) and extract it.
+
+Add the following flags to the CMake args: `-DENABLE_PACK=ON -DPTHON_BINARY_DIR=C:/Path/to/python-3.6.1`
+
+:warning: **DO NOT BUILD THE `INSTALL` TARGET IN VISUAL STUDIO** :warning:
+
+Rebuild the project, then open a powershell in the CMake build folder (Where the EPL-Viz.sln is) and run
+```
+cpack -G WIX -C Release
+```
+
+:warning: choclaty also has an exe called cpack, you might have to resolve this conflict.
+
