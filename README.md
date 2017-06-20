@@ -88,9 +88,11 @@ Edit `fixEPLInstall.bat` in the root folder of the repository, setting <QT_ROOT>
 
 Download the [Python 3.6.1 standalone here](https://www.python.org/ftp/python/3.6.1/python-3.6.1-embed-amd64.zip) and extract it.
 
-It is recommended to use a seperate build configuration based on x64-Release, which can be done by simply copying the configuration section and renaming it to x64-Deploy. 
+Download and install the latest [WiX Toolset build tools](http://wixtoolset.org/releases/).
 
-Add the following flags to the CMake args of x64-Deploy: `-DENABLE_PACK=ON -DPTHON_BINARY_DIR=<PYTHON_PATH>`, wherein <PYTHON_PATH> is the path to the extracted python standalone.
+It is recommended to use a seperate EPL-Viz build configuration based on x64-Release, which can be done by simply copying the configuration section and renaming it to x64-Deploy. 
+
+Add the following flags to the CMake args of x64-Deploy: `-DENABLE_PACK=ON -DPTHON_BINARY_DIR=<PYTHON_PATH>`, wherein <PYTHON_PATH> is the path to the extracted Python standalone.
 
 :warning: **DO NOT BUILD THE `INSTALL` TARGET IN VISUAL STUDIO using these flags!** :warning:
 
