@@ -1,0 +1,12 @@
+[submodule "WS_Root/wireshark"]
+	path = WS_Root/wireshark
+	url = https://github.com/epl-viz/wireshark.git
+[submodule "tinyxml2"]
+	path = tinyxml2
+	url = https://github.com/leethomason/tinyxml2.git
+[submodule "EPL_DataCollect"]
+	path = EPL_DataCollect
+	url = https://github.com/epl-viz/EPL_DataCollect.git
+[submodule "EPL-Viz"]
+	path = EPL-Viz
+	url = https://github.com/epl-viz/EPL-Viz.git
