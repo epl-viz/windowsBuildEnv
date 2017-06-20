@@ -2,6 +2,22 @@
 
 This is a meta repository designed to build EPL-Viz on Windows.
 
+When starting out, make sure to also retrieve the submodules, which can be done by either using
+
+```bash
+git clone --recursive https://github.com/epl-viz/windowsBuildEnv.git
+```
+
+or using
+
+```bash
+git submodule update --init --recursive
+```
+
+on an already cloned repository.
+
+Please note that any paths that have to be modified require '/' instead of '\'. Any scripts that require modification can use either path seperator.
+
 # Required software
 
  - Visual Studio 2017
@@ -14,66 +30,75 @@ This is a meta repository designed to build EPL-Viz on Windows.
 
 Follow instructions [here](https://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html), but STOP at "Generate the build files".
 
-Use the buildWS.bat script in WS_Root to run CMake.
+Edit the `buildWS.bat` script in WS_Root and set "<QT_ROOT>" to your Qt root. Run the script to run CMake.
 
 Then load the Wireshark.sln in wsbuild64 and build the target BUILD_ALL and then INSTALL.
 
-Then run `TODO INSERT SCRIPT HERE` to fix the wireshark installation.
+Finally, run `fixWSInstall.bat` in WS_Root to fix the wireshark installation.
 
 # Build tinyxml2
 
-and open the tinyxml2 Folder in VS2017 (File->Open->Folder).
-Then goto CMake->Change CMake Settings and open the config file
+Open the tinyxml2 Folder in VS2017 (File->Open->Folder).
 
-Insert `-DCMAKE_INSTALL_PREFIX=<Path/to/this/Repo>/install` in cmakeCommandArgs for the 64bit Release.
+Then go to CMake->Change CMake Settings and open the config file.
+
+Insert `-DCMAKE_INSTALL_PREFIX=<REPO_ROOT>/install` in cmakeCommandArgs for the 64bit Release.
+
 Build - and install - the project as x64-Release.
 
 # Build EPL_DataCollect
 
-Install cython via `pip install cython`
+Install cython via `pip install cython`.
 
-and open the Folder in VS2017 and chanche the 64bit release cmake options to 
+Open the EPL_DataCollect folder in VS2017 and change the 64bit release cmake options to 
 
 ```bash
--DWIRESHARK_BASE_DIR=<Path/to/this/Repo>/WS_Roor -DWireshark_DIR=<Path/to/this/Repo>/install/lib/Wireshark -DTinyXML2_ROOT=<Path/to/this/Repo>/install -DCMAKE_INSTALL_PREFIX=<Path/to/this/Repo>/install -T host=x64
+-DWIRESHARK_BASE_DIR=<REPO_ROOT>/WS_Root -DWireshark_DIR=<REPO_ROOT>/install/lib/Wireshark -DTinyXML2_ROOT=<REPO_ROOT>/install -DCMAKE_INSTALL_PREFIX=<REPO_ROOT>/install -T host=x64
 ```
 
-then build and install the project
+then build and install the project.
 
 # Install EPL-Viz
 
 ## Install Qwt
 
-Download Qwt: https://sourceforge.net/projects/qwt/files/qwt/6.1.3/
+Download [Qwt 6.1.3](https://sourceforge.net/projects/qwt/files/qwt/6.1.3/) and extract.
 
-Edit the qwtconfig.pri in qwt-6.1.3 and set the `QWT_INSTALL_PREFIX` to `<Path/to/this/Repo>/install`
+Edit the `qwtconfig.pri` in `qwt-6.1.3` and set the `QWT_INSTALL_PREFIX` to `<REPO_ROOT>/install`
 
-Then open the Qwt project in QtCreator, select the MSVC Qt version (not the UWP).
-Then go to project, select Release, and add a build step (make) with argument install
+Then open the Qwt project in QtCreator, select the MSVC 2017 Qt 5.9 version (not the UWP).
 
-Then run `TODO INSERT SCRIPT HERE` script to fix the qwt installation
+Then go to project, select Release, and add a build step (make) with argument install.
+
+Then run the `fixQwtInstall.bat` script in the root folder of the repository to fix the Qwt installation.
 
 ## Install EPL-Viz
 
-Open the EPL-Viz folder in Visual Studio and set the following CMake parameters:
+Open the EPL-Viz folder in Visual Studio and set the following CMake parameters of the 64bit release:
+
+```bash
+-DWIRESHARK_BASE_DIR=<REPO_ROOT>/WS_Root -DWireshark_DIR=<REPO_ROOT>/install/lib/Wireshark -DTinyXML2_ROOT=<REPO_ROOT>/install -DQt5_DIR=<QT_ROOT>/5.9/msvc2017_64/lib/cmake/Qt5 -DCMAKE_INSTALL_PREFIX=<REPO_ROOT>/install -T host=x64
 ```
--DWIRESHARK_BASE_DIR=<Path/to/this/Repo>/WS_Root -DWireshark_DIR=<Path/to/this/Repo>/install/lib/Wireshark -DTinyXML2_ROOT=<Path/to/this/Repo>/install -DQt5_DIR=C:/Qt/5.9/msvc2017_64/lib/cmake/Qt5 -DCMAKE_INSTALL_PREFIX=<Path/to/this/Repo>/install -DUSE_KTEXTEDITOR=OFF -T host=x64
-```
 
-Build and install the project, then use `TODO INSERT SCRIPT HERE` to finish installing EPL-Viz.
+Build and install the project.
 
-## Creating a MSI
+Edit `fixEPLInstall.bat` in the root folder of the repository, setting <QT_ROOT> to the Qt root folder. Run it to finish installing EPL-Viz.
 
-Download the [python standalone here](https://www.python.org/ftp/python/3.6.1/python-3.6.1-embed-amd64.zip) and extract it.
+## Creating an MSI installer
 
-Add the following flags to the CMake args: `-DENABLE_PACK=ON -DPTHON_BINARY_DIR=C:/Path/to/python-3.6.1`
+Download the [Python 3.6.1 standalone here](https://www.python.org/ftp/python/3.6.1/python-3.6.1-embed-amd64.zip) and extract it.
 
-:warning: **DO NOT BUILD THE `INSTALL` TARGET IN VISUAL STUDIO** :warning:
+It is recommended to use a seperate build configuration based on x64-Release, which can be done by simply copying the configuration section and renaming it to x64-Deploy. 
+
+Add the following flags to the CMake args of x64-Deploy: `-DENABLE_PACK=ON -DPTHON_BINARY_DIR=<PYTHON_PATH>`, wherein <PYTHON_PATH> is the path to the extracted python standalone.
+
+:warning: **DO NOT BUILD THE `INSTALL` TARGET IN VISUAL STUDIO using these flags!** :warning:
 
 Rebuild the project, then open a powershell in the CMake build folder (Where the EPL-Viz.sln is) and run
-```
+
+```bash
 cpack -G WIX -C Release
 ```
 
-:warning: choclaty also has an exe called cpack, you might have to resolve this conflict.
+:warning: chocolatey also has an .exe called cpack, you might have to resolve this conflict.
 
