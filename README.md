@@ -72,6 +72,27 @@ Then go to project, select Release, and add a build step (make) with argument in
 
 Then run the `fixQwtInstall.bat` script in the root folder of the repository to fix the Qwt installation.
 
+## Building KTextEditor
+
+Download and install craft via
+```ps1
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+(new-object net.webclient).DownloadFile('https://raw.githubusercontent.com/KDE/craft/master/setup/install_craft.ps1', (Get-Item -Path ".\" -Verbose).FullName + 'install_craft.ps1' )
+.\install_craft.ps1 -branch master # Select x64 and the microsoft compiler
+```
+
+Then edit <KDEROOT>\etc\kdesettings.ini:
+  - Set `KDECompiler` to `msvc2017`
+  - Set `Qt5` to `5.9.0` (or higher)
+
+Now open the `x64 Native Tools Command Prompt for VS 2017` and run
+```
+<KDEROOT>\craft\kdeenv.bat
+craft ktexteditor
+```
+
+Now cross your fingers and hope that none of the libraries (including Qt5) fails to build in the next 2-3 hours.
+
 ## Install EPL-Viz
 
 Open the EPL-Viz folder in Visual Studio and set the following CMake parameters of the 64bit release:
