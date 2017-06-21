@@ -72,7 +72,9 @@ Then go to project, select Release, and add a build step (make) with argument in
 
 Then run the `fixQwtInstall.bat` script in the root folder of the repository to fix the Qwt installation.
 
-## Building KTextEditor
+## [OPTIONAL] Building KTextEditor
+
+EPL-Viz allows the usage of KTextEditor as a replacement for its default plugin editor. Building it will allow you to add the flag `-DUSE_KTEXTEDITOR=ON` to the EPL-Viz CMake build flags, enabling the use of the KTextEditor.
 
 Download and install craft via
 ```ps1
