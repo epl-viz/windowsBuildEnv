@@ -7,3 +7,12 @@ cmake_install.cmake
 install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
+
+*.vs/
+*.dll
+*.lib
+*.cpp
+*.hpp
+*.c
+*.h
+*.cmake
