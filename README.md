@@ -90,7 +90,7 @@ Then edit <KDEROOT>\etc\kdesettings.ini:
 Now open the `x64 Native Tools Command Prompt for VS 2017` and run
 ```
 <KDEROOT>\craft\kdeenv.bat
-craft ktexteditor
+craft libs/qt5/qtmultimedia ktexteditor
 ```
 
 Now cross your fingers and hope that none of the libraries (including Qt5) fails to build in the next 2-3 hours.

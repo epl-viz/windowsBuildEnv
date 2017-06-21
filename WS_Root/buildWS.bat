@@ -6,8 +6,7 @@ setlocal
 set CYGWIN=nodosfilewarning
 set WIRESHARK_BASE_DIR=%~dp0
 set WIRESHARK_TARGET_PLATFORM=win64
-::Set <QT_ROOT> to the root folder of Qt
-set QT5_BASE_DIR=<QT_ROOT>\5.9\msvc2017_64 
+set QT5_BASE_DIR=%WIRESHARK_BASE_DIR%\..\install 
 
 cd %WIRESHARK_BASE_DIR%
 
@@ -17,6 +16,6 @@ if not exist wsbuild64 mkdir wsbuild64
 cd wsbuild64
 
 ::Run CMake
-cmake -DENABLE_CHM_GUIDES=off -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX="%WIRESHARK_BASE_DIR%\..\install" "%WIRESHARK_BASE_DIR%\wireshark"
+cmake -DENABLE_CHM_GUIDES=off -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX="%WIRESHARK_BASE_DIR%\..\install" "%WIRESHARK_BASE_DIR%\wireshark" -T host=x64
 
 endlocal
