@@ -25,54 +25,10 @@ Please note that any paths that have to be modified require '/' instead of '\'. 
  - Python 3.6.1
  
 :warning: Make sure that python is installed in a path that **does NOT contain any spaces** :warning:
- 
-# Build Wireshark
 
-Follow instructions [here](https://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html), but STOP at "Generate the build files".
+# Building and installing dependencies
 
-Edit the `buildWS.bat` script in WS_Root and set "<QT_ROOT>" to your Qt root. Run the script to run CMake.
-
-Then load the Wireshark.sln in wsbuild64 and build the target BUILD_ALL and then INSTALL.
-
-Finally, run `fixWSInstall.bat` in WS_Root to fix the wireshark installation.
-
-# Build tinyxml2
-
-Open the tinyxml2 Folder in VS2017 (File->Open->Folder).
-
-Then go to CMake->Change CMake Settings and open the config file.
-
-Insert `-DCMAKE_INSTALL_PREFIX=<REPO_ROOT>/install` in cmakeCommandArgs for the 64bit Release.
-
-Build - and install - the project as x64-Release.
-
-# Build EPL_DataCollect
-
-Install cython via `pip install cython`.
-
-Open the EPL_DataCollect folder in VS2017 and change the 64bit release cmake options to 
-
-```bash
--DWIRESHARK_BASE_DIR=<REPO_ROOT>/WS_Root -DWireshark_DIR=<REPO_ROOT>/install/lib/Wireshark -DTinyXML2_ROOT=<REPO_ROOT>/install -DCMAKE_INSTALL_PREFIX=<REPO_ROOT>/install -T host=x64
-```
-
-then build and install the project.
-
-# Install EPL-Viz
-
-## Install Qwt
-
-Download [Qwt 6.1.3](https://sourceforge.net/projects/qwt/files/qwt/6.1.3/) and extract.
-
-Edit the `qwtconfig.pri` in `qwt-6.1.3` and set the `QWT_INSTALL_PREFIX` to `<REPO_ROOT>/install`
-
-Then open the Qwt project in QtCreator, select the MSVC 2017 Qt 5.9 version (not the UWP).
-
-Then go to project, select Release, and add a build step (make) with argument install.
-
-Then run the `fixQwtInstall.bat` script in the root folder of the repository to fix the Qwt installation.
-
-## [OPTIONAL] Building KTextEditor
+## Building KTextEditor and Qt5
 
 EPL-Viz allows the usage of KTextEditor as a replacement for its default plugin editor. Building it will allow you to add the flag `-DUSE_KTEXTEDITOR=ON` to the EPL-Viz CMake build flags, enabling the use of the KTextEditor.
 
@@ -94,20 +50,46 @@ craft libs/qt5/qtmultimedia ktexteditor
 ```
 
 Now cross your fingers and hope that none of the libraries (including Qt5) fails to build in the next 2-3 hours.
+ 
+## Build Wireshark
 
-## Install EPL-Viz
+Follow instructions [here](https://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html), but STOP at "Generate the build files".
 
-Open the EPL-Viz folder in Visual Studio and set the following CMake parameters of the 64bit release:
+Run the `buildWS.bat` script to run CMake.
 
-```bash
--DWIRESHARK_BASE_DIR=<REPO_ROOT>/WS_Root -DWireshark_DIR=<REPO_ROOT>/install/lib/Wireshark -DTinyXML2_ROOT=<REPO_ROOT>/install -DQt5_DIR=<QT_ROOT>/5.9/msvc2017_64/lib/cmake/Qt5 -DCMAKE_INSTALL_PREFIX=<REPO_ROOT>/install -T host=x64
-```
+Then load the Wireshark.sln in wsbuild64 and build the target BUILD_ALL and then INSTALL.
 
-Build and install the project.
+Finally, run `fixWSInstall.bat` in WS_Root to fix the wireshark installation.
 
-Edit `fixEPLInstall.bat` in the root folder of the repository, setting <QT_ROOT> to the Qt root folder. Run it to finish installing EPL-Viz.
+## Build Qwt
 
-## Creating an MSI installer
+Download [Qwt 6.1.3](https://sourceforge.net/projects/qwt/files/qwt/6.1.3/) into the build root.
+
+Then run `buildQWT.bat`
+
+If there are build errors, try running `<KDEROOT>\craft\kdeenv.bat` in a differen shell first.
+
+## Build tinyxml2
+
+Open the tinyxml2 Folder in VS2017 (File->Open->Folder).
+
+Build - and install - the project as x64-Release.
+
+# Building and installing EPL-Viz
+
+First run `copyConfig.bat`
+
+## Build EPL_DataCollect
+
+Install cython via `pip install cython`.
+
+Open the EPL_DataCollect folder in VS2017 and then build and install the project (as x64-Release).
+
+## Build EPL-Viz
+
+Open the EPL-Viz folder in Visual Studio and build and install the project.
+
+### Creating an MSI installer
 
 Download the [Python 3.6.1 standalone here](https://www.python.org/ftp/python/3.6.1/python-3.6.1-embed-amd64.zip) and extract it.
 

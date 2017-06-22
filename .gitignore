@@ -6,3 +6,4 @@ WS_Root/*
 !*.git_KEEP
 !*.gitignore
 !/README.md
+!/*.json
