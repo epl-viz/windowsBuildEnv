@@ -4,11 +4,13 @@ setlocal enabledelayedexpansion
 
 set SRC=%1
 set BUILD_ROOT=%~dp0
+set EXTRACTED=FALSE
 
-if "%SRC%"=="" (
-  echo USAGE: %0 qwt-*.tar.bz2
-  endlocal
-  exit /B
+if not exist qwt-* ( 
+    echo Could not find the qwt source folder
+    echo Please ensure the folder follows the name
+    endlocal
+    exit /B
 )
 
 cd "%BUILD_ROOT%"
@@ -21,9 +23,22 @@ for %%I IN (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) DO (
 )
 
 if "%CYG_DIR%"=="NOTFOUND" (
-  echo "UNABLE TO FIND CYGWIN"
-  endlocal
-  exit /B
+  :: Try to find cygwin via path by locating Cygstart.exe
+  for %%I in (Cygstart.exe) do (
+   set CYG_START=%%~dp$PATH:I
+  )
+  
+  if NOT "%CYG_START%"=="" (
+    set CYG_DIR=%CYG_START:~0,-4%
+  )
+  
+  :: Check if cygwin was in path
+  if "%CYG_DIR%"=="NOTFOUND" (
+    echo "UNABLE TO FIND CYGWIN"
+    echo "Add the cygwin/bin folder to your path or set the path manually in this file."
+    endlocal
+    exit /B
+  )
 )
 
 echo Found cygwin: %CYG_DIR%
@@ -34,7 +49,7 @@ set ECHO_EXE=%CYG_DIR%\bin\echo.exe
 set QMAKE_EXE=%BUILD_ROOT%\install\bin\qmake.exe
 set JOM_EXE=%BUILD_ROOT%\install\dev-utils\bin\jom.exe
 
-for %%I IN (%SED_EXE% %TAR_EXE% %ECHO_EXE% %QMAKE_EXE% %JOM_EXE%) DO (
+for %%I IN (%SED_EXE% %ECHO_EXE% %QMAKE_EXE% %JOM_EXE%) DO (
   if NOT EXIST "%%I" (
     echo "UNABLE TO FIND %%I"
     endlocal
@@ -43,19 +58,10 @@ for %%I IN (%SED_EXE% %TAR_EXE% %ECHO_EXE% %QMAKE_EXE% %JOM_EXE%) DO (
 )
 
 echo Found sed:    %SED_EXE%
-echo Found tar:    %TAR_EXE%
 echo Found echo:   %ECHO_EXE%
 echo Found qmake:  %QMAKE_EXE%
 echo Found jom:    %JOM_EXE%
 
-if NOT EXIST "%SRC%" (
-  echo %SRC% does not exit
-  endlocal
-  exit /B
-)
-
-echo Extracting %SRC%
-%TAR_EXE% -xf %SRC%
 cd qwt-*
 
 %ECHO_EXE% -n %BUILD_ROOT% > tmp.txt
