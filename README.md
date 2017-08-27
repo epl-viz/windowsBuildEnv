@@ -39,17 +39,19 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 .\install_craft.ps1 -branch master # Select x64 and the microsoft compiler
 ```
 
-Then edit <KDEROOT>\etc\kdesettings.ini:
-  - Set `KDECompiler` to `msvc2017`
-  - Set `Qt5` to `5.9.0` (or higher)
+Then edit <CRAFTROOT>\etc\CraftSettings.ini:
+  - Under `General`, set `ABI` to `windows-msvc2017_64-cl`
+  - Under `QtSDK`, set `Version` to `5.9` (or higher) and `Compiler` to msvc2017
 
 Now open the `x64 Native Tools Command Prompt for VS 2017` and run
 ```
-<KDEROOT>\craft\kdeenv.bat
+<CRAFTROOT>\craft\kdeenv.bat
 craft libs/qt5/qtmultimedia ktexteditor
 ```
 
-Now cross your fingers and hope that none of the libraries (including Qt5) fails to build in the next 2-3 hours.
+Now cross your fingers and hope that none of the libraries (including Qt5) fails to build. The build process may take a while.
+
+Once completed, run `fixKF5Install.bat`.
  
 ## Build Wireshark
 
@@ -57,27 +59,27 @@ Follow instructions [here](https://www.wireshark.org/docs/wsdg_html_chunked/ChSe
 
 Run the `buildWS.bat` script to run CMake.
 
-Then load the Wireshark.sln in wsbuild64 and build the target BUILD_ALL and then INSTALL.
+Then load the Wireshark.sln in wsbuild64, set the build configuration to x64-Release and build the target BUILD_ALL and then INSTALL.
 
-Finally, run `fixWSInstall.bat` in WS_Root to fix the wireshark installation.
+Finally, run `fixWSInstall.bat` in WS_Root to complete the wireshark installation.
 
 ## Build Qwt
 
-Download [Qwt 6.1.3](https://sourceforge.net/projects/qwt/files/qwt/6.1.3/) into the build root.
+Download [Qwt 6.1.3](https://sourceforge.net/projects/qwt/files/qwt/6.1.3/) and extract the downloaded source into the build root.
 
-Then run `buildQWT.bat`
+Then run `buildQWT.bat`.
 
-If there are build errors, try running `<KDEROOT>\craft\kdeenv.bat` in a differen shell first.
+If there are build errors, try running `<CRAFTROOT>\craft\kdeenv.bat` in a different shell first.
 
 ## Build tinyxml2
+
+Run `copyConfig.bat`
 
 Open the tinyxml2 Folder in VS2017 (File->Open->Folder).
 
 Build - and install - the project as x64-Release.
 
 # Building and installing EPL-Viz
-
-First run `copyConfig.bat`
 
 ## Build EPL_DataCollect
 
@@ -95,11 +97,9 @@ Download the [Python 3.6.1 standalone here](https://www.python.org/ftp/python/3.
 
 Download and install the latest [WiX Toolset build tools](http://wixtoolset.org/releases/).
 
-It is recommended to use a seperate EPL-Viz build configuration based on x64-Release, which can be done by simply copying the configuration section and renaming it to x64-Deploy. 
+Select the x64-Deploy build configuration
 
-Add the following flags to the CMake args of x64-Deploy: `-DENABLE_PACK=ON -DPTHON_BINARY_DIR=<PYTHON_PATH>`, wherein <PYTHON_PATH> is the path to the extracted Python standalone.
-
-:warning: **DO NOT BUILD THE `INSTALL` TARGET IN VISUAL STUDIO using these flags!** :warning:
+:warning: **DO NOT BUILD THE `INSTALL` TARGET IN VISUAL STUDIO using x64-Deploy!** :warning:
 
 Rebuild the project, then open a powershell in the CMake build folder (Where the EPL-Viz.sln is) and run
 
